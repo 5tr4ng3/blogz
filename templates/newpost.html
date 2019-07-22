@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h1 style="text-align: center">Build a Blog</h1>
+<hr />
+
+{% with messages = get_flashed_messages(with_categories=True) %}
+    <ul>
+    {% for category,message in messages %}
+        <li class="{{category}}">{{message}}</li>
+    {% endfor %}
+    </ul>
+{% endwith %}
+
+<form action="/newpost" method="post">
+
+    <p style="margin-top: 20px; margin-bottom: 15px">
+        <label for="post_title" style="font-size: 135%">Blog Title</label>
+    </p>
+
+    <p style="margin-left: 25px">
+        <input name="post_title" type="Text" value="{{post_title}}" style="font-family: Arial; font-size: 110%">
+    </p>
+
+    <p style="margin-top: 45px; margin-bottom: 15px">
+        <label for="post_message" style="font-size: 135%">Post</label>
+    </p>
+
+    <p style="margin-left: 25px">
+        <textarea rows="5" cols="50" name="post_message" style="font-family: Arial"></textarea>
+    </p>
+
+    <p style="margin-top: 45px; margin-left: 25px">
+        <input type="submit" value="POST!">
+    </p>
+
+</form>
+{% endblock %}
