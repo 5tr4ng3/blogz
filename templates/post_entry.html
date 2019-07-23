@@ -6,5 +6,6 @@
 
 <h2>{{post.post_title}}</h2>
 <p>{{post.post_message}}</p>
+<h3> <a href="/user_posts?user={{post.owner.id}}">{{post.owner.username}}</a></h3>
 
 {% endblock %}

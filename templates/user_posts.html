@@ -11,6 +11,7 @@
 {% for post in posts %}
 <h2> <a href="/post_entry?post={{post.id}}">{{post.post_title}}</a></h2>
 <p>{{post.post_message}}</p>
+<h3>{{post.owner.username}}</a></h3>
 <hr />
 {% endfor %}
 
