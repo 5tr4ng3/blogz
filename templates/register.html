@@ -1,13 +1,22 @@
 {% extends "base.html" %}
 
 {% block content %}
+
+{% with messages = get_flashed_messages(with_categories=True) %}
+    <ul>
+    {% for category,message in messages %}
+        <li class="{{category}}">{{message}}</li>
+    {% endfor %}
+    </ul>
+{% endwith %}
+
 <h1>Register to Build a Blog!</h1>
 <form action="/register" method="post">
     <table>
         <tr>
-            <td><label for="email">Email</label></td>
+            <td><label for="username">Email</label></td>
             <td>
-                <input name="email" type="email" value="{{ email }}">
+                <input name="username" type="text" value="{{ username }}">
             </td>
         </tr>
         <tr>
