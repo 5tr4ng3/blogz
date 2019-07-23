@@ -7,7 +7,7 @@
 <ul>
     <li>
     {% for user in users %}
-    <h2> <a href="/user_posts?user={{user.username}}">{{user.username}}</a></h2>
+    <h2> <a href="/user_posts?user={{user.id}}">{{user.username}}</a></h2>
     {% endfor %}
     </li>
 </ul>

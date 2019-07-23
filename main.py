@@ -12,24 +12,23 @@ class Blog(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     post_title = db.Column(db.String(120))
     post_message = db.Column(db.String(240))
-    user = db.Column(db.Integer, db.ForeignKey('user.id'))
+    owner_id = db.Column(db.Integer, db.ForeignKey('user.id'))
 
-    def __init__(self, title, message):
+    def __init__(self, title, message, owner):
         self.post_title = title
         self.post_message = message
-        self.user = user
+        self.owner = owner
 
 
 class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(120), unique=True)
     password = db.Column(db.String(120))
-    posts = db.relationship('Blog', backref='user')
+    posts = db.relationship('Blog', backref='owner')
 
-    def __init__(self, username, password, posts):
+    def __init__(self, username, password):
         self.username = username
         self.password = password
-        self.posts = posts
 
 
 @app.before_request
@@ -52,14 +51,14 @@ def login():
     if request.method == 'POST':
         username = request.form['username']
         password = request.form['password']
-        user = User.query.filter_by(username=username).first()
+        owner = User.query.filter_by(username=username).first()
 
-        if user and user.password == password:
+        if owner and owner.password == password:
             session['username'] = username
             flash("Logged in")
             return redirect('/')
         else:
-            flash("User password incorrect or user does not exist", 'error')
+            flash("User password incorrect or owner does not exist", 'error')
 
     return render_template('login.html')
 
@@ -114,8 +113,9 @@ def new_post():
     if request.method == 'POST':
         post_title = request.form['post_title']
         post_message = request.form['post_message']
+        owner = User.query.filter_by(username=session['username']).first()
         if post_title and post_message:
-            new_post = Blog(post_title, post_message)
+            new_post = Blog(post_title, post_message, owner)
             db.session.add(new_post)
             db.session.commit()
             return render_template('post_entry.html', post=new_post)
@@ -138,12 +138,12 @@ def post_entry():
 @app.route('/user_posts')
 def user_posts():
 
-    username = request.args.get('user')
-    user = User.query.filter_by(username=username).first()
-    posts = Blog.query.filter_by(user=user).all()
+    user_id = request.args.get('user')
+    owner = User.query.filter_by(id=user_id).first()
+    posts = Blog.query.filter_by(owner=owner).all()
 
     return render_template('user_posts.html', posts=posts)
-    
+
 
 
 if __name__ == '__main__':
